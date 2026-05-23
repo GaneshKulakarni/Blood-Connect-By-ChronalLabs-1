@@ -130,6 +130,16 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
         
+        // Toggle username placeholder dynamically
+        const usernameInput = document.querySelector('input[name="username"]');
+        if (usernameInput) {
+            if (selectedRole === 'hospital') {
+                usernameInput.setAttribute('placeholder', 'e.g. city_general_mumbai_hospital');
+            } else {
+                usernameInput.removeAttribute('placeholder');
+            }
+        }
+
         // Show/hide map section
         const mapSection = document.getElementById('map-section');
         if (mapSection) {

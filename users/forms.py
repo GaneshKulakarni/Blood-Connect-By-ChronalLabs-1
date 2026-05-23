@@ -47,6 +47,9 @@ class UserRegistrationForm(UserCreationForm):
         for field in self.fields.values():
             if not isinstance(field.widget, (forms.RadioSelect, forms.CheckboxInput, forms.HiddenInput)):
                 field.widget.attrs.update({'class': 'form-control'})
+        
+        if 'hospital_name' in self.fields:
+            self.fields['hospital_name'].widget.attrs['placeholder'] = 'e.g. City General Mumbai Hospital'
 
     def clean(self):
         cleaned_data = super().clean()
