@@ -15,7 +15,7 @@ def register(request):
         return redirect("dashboard")
     
     if request.method == "POST":
-        form = UserRegistrationForm(request.POST)
+        form = UserRegistrationForm(request.POST, request.FILES)
         if form.is_valid():
             user = form.save()
             # Create role-specific profile
@@ -31,12 +31,20 @@ def register(request):
                 from hospitals.models import HospitalProfile, BloodStock
                 hp = HospitalProfile.objects.create(
                     user=user,
-                    hospital_name=f"{user.get_full_name()} Hospital",
-                    address=user.address or "",
-                    city=user.city or "",
-                    state=user.state or "",
-                    pincode=user.pincode or "",
-                    contact_number=user.phone_number or "",
+                    hospital_name=form.cleaned_data.get("hospital_name"),
+                    hospital_type=form.cleaned_data.get("hospital_type"),
+                    registration_number=form.cleaned_data.get("registration_number"),
+                    address=form.cleaned_data.get("address") or "",
+                    city=form.cleaned_data.get("city") or "",
+                    state=form.cleaned_data.get("state") or "",
+                    pincode=form.cleaned_data.get("pincode") or "",
+                    contact_number=form.cleaned_data.get("phone_number") or "",
+                    emergency_contact=form.cleaned_data.get("emergency_contact") or "",
+                    email=form.cleaned_data.get("email") or "",
+                    website=form.cleaned_data.get("website") or "",
+                    verification_document=form.cleaned_data.get("verification_document"),
+                    latitude=form.cleaned_data.get("latitude"),
+                    longitude=form.cleaned_data.get("longitude"),
                 )
                 BloodStock.objects.create(hospital=hp)
             

@@ -5,10 +5,10 @@ from .models import HospitalProfile, BloodStock, HospitalEmployee
 class HospitalProfileForm(forms.ModelForm):
     class Meta:
         model = HospitalProfile
-        fields = ["hospital_name", "registration_number", "address", "city", "state",
+        fields = ["hospital_name", "hospital_type", "registration_number", "address", "city", "state",
                   "pincode", "contact_number", "emergency_contact", "email", "website",
                   "blood_bank_available", "has_24hr_service", "description", "logo",
-                  "latitude", "longitude"]
+                  "verification_document", "latitude", "longitude"]
         widgets = {
             "address": forms.Textarea(attrs={"rows": 3}),
             "description": forms.Textarea(attrs={"rows": 4}),
