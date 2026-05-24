@@ -58,7 +58,7 @@
                                     <div class="username-requirements mt-2 p-2 rounded bg-light border" style="font-size: 0.75rem;">
                                         <div class="requirement-item d-flex align-items-center mb-1 text-muted" id="user-req-lowercase">
                                             <i class="bi bi-x-circle-fill text-muted me-2 icon-state"></i>
-                                            <span>Only lowercase letters (no capital letters)</span>
+                                            <span>Only lowercase letters and digits (no capital letters)</span>
                                         </div>
                                         <div class="requirement-item d-flex align-items-center mb-1 text-muted" id="user-req-chars">
                                             <i class="bi bi-x-circle-fill text-muted me-2 icon-state"></i>
@@ -336,10 +336,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const validateUsername = function() {
             const val = usernameInput.value;
             
-            // 1. Only lowercase letters (no capital letters)
-            const hasLetters = /[a-zA-Z]/.test(val);
-            const hasUpper = /[A-Z]/.test(val);
-            const isOnlyLower = hasLetters && !hasUpper;
+            // 1. Only lowercase letters and digits (no capital letters)
+            const isOnlyLower = val.length > 0 && !/[A-Z]/.test(val);
             updateRequirements(document.getElementById('user-req-lowercase'), isOnlyLower);
 
             // 2. Allowed characters (lowercase letters, digits, @/_/-)

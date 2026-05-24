@@ -68,7 +68,7 @@ class UserRegistrationForm(UserCreationForm):
             if len(username) > 40:
                 raise forms.ValidationError('Username must be 40 characters or fewer.')
             if any(char.isupper() for char in username):
-                raise forms.ValidationError('Username must contain lowercase letters only (no capital letters allowed).')
+                raise forms.ValidationError('Username must not contain capital letters (only lowercase letters and digits are allowed).')
             import re
             if not re.match(r'^[a-z0-9@_\-]+$', username):
                 raise forms.ValidationError('Username can only contain lowercase letters, digits, and @/_/- characters.')
