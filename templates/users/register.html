@@ -17,21 +17,21 @@
                         <label class="form-label fw-semibold">Register As</label>
                         <div class="role-cards">
                             <label class="role-card" for="id_role_0">
-                                <input type="radio" name="role" value="donor" id="id_role_0" form="reg-form">
+                                <input type="radio" name="role" value="donor" id="id_role_0" form="reg-form" {% if form.role.value == 'donor' or not form.role.value %}checked{% endif %}>
                                 <div class="role-card-inner">
                                     <i class="bi bi-heart-pulse-fill"></i>
                                     <span>Blood Donor</span>
                                 </div>
                             </label>
                             <label class="role-card" for="id_role_1">
-                                <input type="radio" name="role" value="seeker" id="id_role_1" form="reg-form">
+                                <input type="radio" name="role" value="seeker" id="id_role_1" form="reg-form" {% if form.role.value == 'seeker' %}checked{% endif %}>
                                 <div class="role-card-inner">
                                     <i class="bi bi-search-heart"></i>
                                     <span>Blood Seeker</span>
                                 </div>
                             </label>
                             <label class="role-card" for="id_role_2">
-                                <input type="radio" name="role" value="hospital" id="id_role_2" form="reg-form">
+                                <input type="radio" name="role" value="hospital" id="id_role_2" form="reg-form" {% if form.role.value == 'hospital' %}checked{% endif %}>
                                 <div class="role-card-inner">
                                     <i class="bi bi-hospital-fill"></i>
                                     <span>Hospital</span>
@@ -44,14 +44,17 @@
                         {% csrf_token %}
                         <div class="row g-3">
                             {% for field in form %}
-                            {% if field.name != 'role' %}
+                            {% if field.name != 'role' and not field.is_hidden %}
                             <div class="col-md-6 field-wrapper" data-field-name="{{ field.name }}">
                                 <label class="form-label fw-medium small" id="label-for-{{ field.name }}">{{ field.label }}
                                     {% if field.field.required %}<span class="text-blood">*</span>{% endif %}
                                 </label>
                                 {{ field }}
                                 {% if field.errors %}
-                                    <div class="text-danger small">{{ field.errors.0 }}</div>
+                                    <div class="text-danger small mt-1">{{ field.errors.0 }}</div>
+                                {% endif %}
+                                {% if field.help_text %}
+                                    <div class="text-muted mt-1" style="font-size: 0.75rem; opacity: 0.85;">{{ field.help_text|safe }}</div>
                                 {% endif %}
                             </div>
                             {% endif %}
@@ -64,6 +67,14 @@
                                 <button type="button" id="locate-btn" class="btn btn-outline-blood btn-sm"><i class="bi bi-geo-alt-fill me-1"></i>Locate Me</button>
                             </div>
                         </div>
+                        
+                        <!-- Hidden Fields -->
+                        {% for field in form %}
+                            {% if field.is_hidden %}
+                                {{ field }}
+                            {% endif %}
+                        {% endfor %}
+
                         <button type="submit" class="btn btn-blood w-100 mt-4">
                             <i class="bi bi-person-check-fill me-2"></i>Create Account
                         </button>

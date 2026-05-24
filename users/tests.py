@@ -1,9 +1,6 @@
 from django.test import TestCase
-from django.contrib.auth import get_user_model
 from users.forms import UserRegistrationForm
 from hospitals.models import HospitalProfile
-
-User = get_user_model()
 
 class HospitalRegistrationTests(TestCase):
     def test_donor_registration_validation(self):
@@ -14,8 +11,8 @@ class HospitalRegistrationTests(TestCase):
             'first_name': 'John',
             'last_name': 'Doe',
             'phone_number': '1234567890',
-            'password1': 'securepass123',
-            'password2': 'securepass123',
+            'password1': 'SecurePass2026!',
+            'password2': 'SecurePass2026!',
         }
         form = UserRegistrationForm(data=form_data)
         self.assertTrue(form.is_valid(), form.errors)
@@ -28,8 +25,8 @@ class HospitalRegistrationTests(TestCase):
             'first_name': 'Jane', # Contact person
             'last_name': 'Smith', # Designation
             'phone_number': '1234567890',
-            'password1': 'securepass123',
-            'password2': 'securepass123',
+            'password1': 'SecurePass2026!',
+            'password2': 'SecurePass2026!',
         }
         form = UserRegistrationForm(data=form_data)
         self.assertFalse(form.is_valid())
@@ -52,8 +49,8 @@ class HospitalRegistrationTests(TestCase):
             'hospital_name': 'City Health Hospital',
             'hospital_type': 'private',
             'registration_number': 'HOSP-12345',
-            'password1': 'securepass123',
-            'password2': 'securepass123',
+            'password1': 'SecurePass2026!',
+            'password2': 'SecurePass2026!',
         }
         form = UserRegistrationForm(data=form_data)
         self.assertTrue(form.is_valid(), form.errors)

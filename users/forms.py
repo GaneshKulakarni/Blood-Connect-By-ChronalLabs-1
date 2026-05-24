@@ -50,6 +50,27 @@ class UserRegistrationForm(UserCreationForm):
         
         if 'hospital_name' in self.fields:
             self.fields['hospital_name'].widget.attrs['placeholder'] = 'e.g. City General Mumbai Hospital'
+        
+        if 'username' in self.fields:
+            self.fields['username'].help_text = 'Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.'
+        if 'password1' in self.fields:
+            self.fields['password1'].help_text = 'Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character (e.g. @$!%*?&#).'
+
+    def clean_password1(self):
+        password = self.cleaned_data.get('password1')
+        if password:
+            import re
+            if len(password) < 8:
+                raise forms.ValidationError('Password must be at least 8 characters long.')
+            if not re.search(r'[A-Z]', password):
+                raise forms.ValidationError('Password must contain at least one uppercase letter.')
+            if not re.search(r'[a-z]', password):
+                raise forms.ValidationError('Password must contain at least one lowercase letter.')
+            if not re.search(r'[0-9]', password):
+                raise forms.ValidationError('Password must contain at least one number.')
+            if not re.search(r'[@$!%*?&#]', password):
+                raise forms.ValidationError('Password must contain at least one special character (e.g. @$!%*?&#).')
+        return password
 
     def clean(self):
         cleaned_data = super().clean()
