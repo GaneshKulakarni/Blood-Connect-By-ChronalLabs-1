@@ -58,7 +58,7 @@ class UserRegistrationForm(UserCreationForm):
         if 'username' in self.fields:
             self.fields['username'].max_length = 40
             self.fields['username'].widget.attrs['maxlength'] = 40
-            self.fields['username'].help_text = 'Required. 40 characters or fewer. Lowercase letters, digits and @/_/- only. (Recommended: start with a letter).'
+            self.fields['username'].help_text = 'Required. 40 characters or fewer. Lowercase letters, digits and @/_/- only. (Recommended: start with a special character).'
         if 'password1' in self.fields:
             self.fields['password1'].help_text = 'Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character (e.g. @$!%*?&#).'
 

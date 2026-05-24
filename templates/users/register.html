@@ -66,7 +66,7 @@
                                         </div>
                                         <div class="requirement-item d-flex align-items-center mb-1 text-muted" id="user-req-start">
                                             <i class="bi bi-x-circle-fill text-muted me-2 icon-state"></i>
-                                            <span>Starts with a letter (recommended)</span>
+                                            <span>Starts with a special character (recommended)</span>
                                         </div>
                                         <div class="requirement-item d-flex align-items-center text-muted" id="user-req-length">
                                             <i class="bi bi-x-circle-fill text-muted me-2 icon-state"></i>
@@ -346,9 +346,9 @@ document.addEventListener('DOMContentLoaded', function() {
             const isAllowed = val.length > 0 && /^[a-z0-9@_\-]+$/.test(val);
             updateRequirements(document.getElementById('user-req-chars'), isAllowed);
 
-            // 2.5 Starts with a letter
-            const startsWithLetter = /^[a-z]/.test(val);
-            updateRequirements(document.getElementById('user-req-start'), startsWithLetter);
+            // 2.5 Starts with a special character (@, _, -)
+            const startsWithSpecial = /^[@_\-]/.test(val);
+            updateRequirements(document.getElementById('user-req-start'), startsWithSpecial);
 
             // 3. Length (40 chars or fewer)
             const isLenValid = val.length > 0 && val.length <= 40;
