@@ -59,6 +59,31 @@ class UserRegistrationForm(UserCreationForm):
             self.fields['username'].max_length = 40
             self.fields['username'].widget.attrs['maxlength'] = 40
             self.fields['username'].help_text = 'Required. 40 characters or fewer. Lowercase letters, digits and @/_/- only. (Recommended: start with a special character).'
+        
+        # Reorder fields to support organization-first layout for hospital role
+        ordered_fields = [
+            'role',
+            'hospital_name',
+            'hospital_type',
+            'registration_number',
+            'username',
+            'first_name',
+            'last_name',
+            'email',
+            'phone_number',
+            'address',
+            'city',
+            'state',
+            'emergency_contact',
+            'blood_bank_available',
+            'website',
+            'verification_document',
+            'latitude',
+            'longitude',
+            'password1',
+            'password2'
+        ]
+        self.fields = {key: self.fields[key] for key in ordered_fields if key in self.fields}
         if 'password1' in self.fields:
             self.fields['password1'].help_text = 'Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character (e.g. @$!%*?&#).'
 

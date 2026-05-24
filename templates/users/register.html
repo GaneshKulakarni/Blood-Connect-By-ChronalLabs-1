@@ -162,26 +162,54 @@ document.addEventListener('DOMContentLoaded', function() {
                     wrapper.style.display = 'block';
                 }
                 
-                // Relabel fields
-                if (fieldName === 'first_name') {
+                // Relabel fields and add required markers for Hospital onboarding
+                if (fieldName === 'username') {
+                    if (labelEl) labelEl.innerHTML = 'Hospital Username (for login) <span class="text-blood">*</span>';
+                } else if (fieldName === 'first_name') {
                     if (labelEl) labelEl.innerHTML = 'Contact Person Name <span class="text-blood">*</span>';
                 } else if (fieldName === 'last_name') {
                     if (labelEl) labelEl.innerHTML = 'Designation <span class="text-blood">*</span>';
                 } else if (fieldName === 'phone_number') {
                     if (labelEl) labelEl.innerHTML = 'Contact Number <span class="text-blood">*</span>';
+                } else if (fieldName === 'hospital_name') {
+                    if (labelEl) labelEl.innerHTML = 'Hospital Name <span class="text-blood">*</span>';
+                } else if (fieldName === 'hospital_type') {
+                    if (labelEl) labelEl.innerHTML = 'Hospital Type <span class="text-blood">*</span>';
+                } else if (fieldName === 'registration_number') {
+                    if (labelEl) labelEl.innerHTML = 'Registration/License Number <span class="text-blood">*</span>';
+                } else if (fieldName === 'address') {
+                    if (labelEl) labelEl.innerHTML = 'Address <span class="text-blood">*</span>';
+                } else if (fieldName === 'city') {
+                    if (labelEl) labelEl.innerHTML = 'City <span class="text-blood">*</span>';
+                } else if (fieldName === 'state') {
+                    if (labelEl) labelEl.innerHTML = 'State <span class="text-blood">*</span>';
                 }
             } else {
                 if (hospitalFields.includes(fieldName)) {
                     wrapper.style.display = 'none';
                 }
                 
-                // Restore standard labels
-                if (fieldName === 'first_name') {
+                // Restore standard labels for Donor/Seeker
+                if (fieldName === 'username') {
+                    if (labelEl) labelEl.innerHTML = 'Username <span class="text-blood">*</span>';
+                } else if (fieldName === 'first_name') {
                     if (labelEl) labelEl.innerHTML = 'First Name <span class="text-blood">*</span>';
                 } else if (fieldName === 'last_name') {
                     if (labelEl) labelEl.innerHTML = 'Last Name <span class="text-blood">*</span>';
                 } else if (fieldName === 'phone_number') {
                     if (labelEl) labelEl.innerHTML = 'Phone Number <span class="text-blood">*</span>';
+                } else if (fieldName === 'hospital_name') {
+                    if (labelEl) labelEl.innerHTML = 'Hospital Name';
+                } else if (fieldName === 'hospital_type') {
+                    if (labelEl) labelEl.innerHTML = 'Hospital Type';
+                } else if (fieldName === 'registration_number') {
+                    if (labelEl) labelEl.innerHTML = 'Registration/License Number';
+                } else if (fieldName === 'address') {
+                    if (labelEl) labelEl.innerHTML = 'Address';
+                } else if (fieldName === 'city') {
+                    if (labelEl) labelEl.innerHTML = 'City';
+                } else if (fieldName === 'state') {
+                    if (labelEl) labelEl.innerHTML = 'State';
                 }
             }
         });
