@@ -33,7 +33,11 @@ class UserRegistrationForm(UserCreationForm):
     emergency_contact = forms.CharField(max_length=15, required=False, label='Emergency Contact Number')
     blood_bank_available = forms.BooleanField(required=False, initial=True, label='Blood Bank Available')
     website = forms.URLField(required=False, label='Website URL')
-    verification_document = forms.FileField(required=False, label='Upload Verification Document')
+    verification_document = forms.FileField(
+        required=False,
+        label='Upload Verification Document (PDF only)',
+        widget=forms.FileInput(attrs={'accept': '.pdf'})
+    )
     latitude = forms.DecimalField(max_digits=9, decimal_places=6, required=False, widget=forms.HiddenInput())
     longitude = forms.DecimalField(max_digits=9, decimal_places=6, required=False, widget=forms.HiddenInput())
     
@@ -52,9 +56,23 @@ class UserRegistrationForm(UserCreationForm):
             self.fields['hospital_name'].widget.attrs['placeholder'] = 'e.g. City General Mumbai Hospital'
         
         if 'username' in self.fields:
-            self.fields['username'].help_text = 'Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.'
+            self.fields['username'].max_length = 40
+            self.fields['username'].widget.attrs['maxlength'] = 40
+            self.fields['username'].help_text = 'Required. 40 characters or fewer. Lowercase letters, digits and @/_/- only. (Recommended: start with a letter).'
         if 'password1' in self.fields:
             self.fields['password1'].help_text = 'Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character (e.g. @$!%*?&#).'
+
+    def clean_username(self):
+        username = self.cleaned_data.get('username')
+        if username:
+            if len(username) > 40:
+                raise forms.ValidationError('Username must be 40 characters or fewer.')
+            if any(char.isupper() for char in username):
+                raise forms.ValidationError('Username must contain lowercase letters only (no capital letters allowed).')
+            import re
+            if not re.match(r'^[a-z0-9@_\-]+$', username):
+                raise forms.ValidationError('Username can only contain lowercase letters, digits, and @/_/- characters.')
+        return username
 
     def clean_password1(self):
         password = self.cleaned_data.get('password1')
@@ -113,6 +131,11 @@ class UserRegistrationForm(UserCreationForm):
             state = cleaned_data.get('state')
             if not state:
                 self.add_error('state', 'State is required.')
+                
+            verification_document = cleaned_data.get('verification_document')
+            if verification_document:
+                if not verification_document.name.lower().endswith('.pdf'):
+                    self.add_error('verification_document', 'Only PDF files are allowed for the verification document.')
         else:
             # Donor or Seeker
             first_name = cleaned_data.get('first_name')

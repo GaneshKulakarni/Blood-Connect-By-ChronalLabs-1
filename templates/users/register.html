@@ -53,7 +53,52 @@
                                 {% if field.errors %}
                                     <div class="text-danger small mt-1">{{ field.errors.0 }}</div>
                                 {% endif %}
-                                {% if field.help_text %}
+
+                                {% if field.name == 'username' %}
+                                    <div class="username-requirements mt-2 p-2 rounded bg-light border" style="font-size: 0.75rem;">
+                                        <div class="requirement-item d-flex align-items-center mb-1 text-muted" id="user-req-lowercase">
+                                            <i class="bi bi-x-circle-fill text-muted me-2 icon-state"></i>
+                                            <span>Only lowercase letters (no capital letters)</span>
+                                        </div>
+                                        <div class="requirement-item d-flex align-items-center mb-1 text-muted" id="user-req-chars">
+                                            <i class="bi bi-x-circle-fill text-muted me-2 icon-state"></i>
+                                            <span>No spaces or special characters (except @/_/-)</span>
+                                        </div>
+                                        <div class="requirement-item d-flex align-items-center mb-1 text-muted" id="user-req-start">
+                                            <i class="bi bi-x-circle-fill text-muted me-2 icon-state"></i>
+                                            <span>Starts with a letter (recommended)</span>
+                                        </div>
+                                        <div class="requirement-item d-flex align-items-center text-muted" id="user-req-length">
+                                            <i class="bi bi-x-circle-fill text-muted me-2 icon-state"></i>
+                                            <span>40 characters or fewer</span>
+                                        </div>
+                                    </div>
+                                {% elif field.name == 'password1' %}
+                                    <div class="password-requirements mt-2 p-2 rounded bg-light border" style="font-size: 0.75rem;">
+                                        <div class="requirement-item d-flex align-items-center mb-1 text-muted" id="pass-req-length">
+                                            <i class="bi bi-x-circle-fill text-muted me-2 icon-state"></i>
+                                            <span>At least 8 characters</span>
+                                        </div>
+                                        <div class="requirement-item d-flex align-items-center mb-1 text-muted" id="pass-req-lowercase">
+                                            <i class="bi bi-x-circle-fill text-muted me-2 icon-state"></i>
+                                            <span>At least one lowercase letter</span>
+                                        </div>
+                                        <div class="requirement-item d-flex align-items-center mb-1 text-muted" id="pass-req-uppercase">
+                                            <i class="bi bi-x-circle-fill text-muted me-2 icon-state"></i>
+                                            <span>At least one uppercase letter</span>
+                                        </div>
+                                        <div class="requirement-item d-flex align-items-center mb-1 text-muted" id="pass-req-digit">
+                                            <i class="bi bi-x-circle-fill text-muted me-2 icon-state"></i>
+                                            <span>At least one digit</span>
+                                        </div>
+                                        <div class="requirement-item d-flex align-items-center text-muted" id="pass-req-special">
+                                            <i class="bi bi-x-circle-fill text-muted me-2 icon-state"></i>
+                                            <span>At least one special character (@$!%*?&#)</span>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                
+                                {% if field.help_text and field.name != 'username' and field.name != 'password1' %}
                                     <div class="text-muted mt-1" style="font-size: 0.75rem; opacity: 0.85;">{{ field.help_text|safe }}</div>
                                 {% endif %}
                             </div>
@@ -145,7 +190,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const usernameInput = document.querySelector('input[name="username"]');
         if (usernameInput) {
             if (selectedRole === 'hospital') {
-                usernameInput.setAttribute('placeholder', 'e.g. city_general_mumbai_hospital');
+                usernameInput.setAttribute('placeholder', 'e.g. @city_hospital_hyd');
             } else {
                 usernameInput.removeAttribute('placeholder');
             }
@@ -260,6 +305,105 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             } else {
                 alert("Geolocation is not supported by your browser.");
+            }
+        });
+    }
+
+    // Username and Password real-time validation checklist
+    const usernameInput = document.querySelector('input[name="username"]');
+    const passwordInput = document.querySelector('input[name="password1"]');
+
+    function updateRequirements(element, isValid) {
+        if (!element) return;
+        const icon = element.querySelector('.icon-state');
+        if (isValid) {
+            element.classList.remove('text-muted', 'text-danger');
+            element.classList.add('text-success');
+            if (icon) {
+                icon.className = 'bi bi-check-circle-fill text-success me-2 icon-state';
+            }
+        } else {
+            element.classList.remove('text-success');
+            element.classList.add('text-muted');
+            if (icon) {
+                icon.className = 'bi bi-x-circle-fill text-muted me-2 icon-state';
+            }
+        }
+    }
+
+    if (usernameInput) {
+        // Trigger validation on input and load
+        const validateUsername = function() {
+            const val = usernameInput.value;
+            
+            // 1. Only lowercase letters (no capital letters)
+            const hasLetters = /[a-zA-Z]/.test(val);
+            const hasUpper = /[A-Z]/.test(val);
+            const isOnlyLower = hasLetters && !hasUpper;
+            updateRequirements(document.getElementById('user-req-lowercase'), isOnlyLower);
+
+            // 2. Allowed characters (lowercase letters, digits, @/_/-)
+            const isAllowed = val.length > 0 && /^[a-z0-9@_\-]+$/.test(val);
+            updateRequirements(document.getElementById('user-req-chars'), isAllowed);
+
+            // 2.5 Starts with a letter
+            const startsWithLetter = /^[a-z]/.test(val);
+            updateRequirements(document.getElementById('user-req-start'), startsWithLetter);
+
+            // 3. Length (40 chars or fewer)
+            const isLenValid = val.length > 0 && val.length <= 40;
+            updateRequirements(document.getElementById('user-req-length'), isLenValid);
+        };
+        usernameInput.addEventListener('input', validateUsername);
+        setTimeout(validateUsername, 100);
+    }
+
+    if (passwordInput) {
+        const validatePassword = function() {
+            const val = passwordInput.value;
+
+            // 1. At least 8 characters
+            updateRequirements(document.getElementById('pass-req-length'), val.length >= 8);
+
+            // 2. At least one lowercase letter
+            updateRequirements(document.getElementById('pass-req-lowercase'), /[a-z]/.test(val));
+
+            // 3. At least one uppercase letter
+            updateRequirements(document.getElementById('pass-req-uppercase'), /[A-Z]/.test(val));
+
+            // 4. At least one digit
+            updateRequirements(document.getElementById('pass-req-digit'), /[0-9]/.test(val));
+
+            // 5. At least one special character
+            updateRequirements(document.getElementById('pass-req-special'), /[@$!%*?&#]/.test(val));
+        };
+        passwordInput.addEventListener('input', validatePassword);
+        setTimeout(validatePassword, 100);
+    }
+
+    // PDF upload validation checker
+    const fileInput = document.querySelector('input[name="verification_document"]');
+    if (fileInput) {
+        const wrapper = fileInput.closest('.field-wrapper');
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'text-danger small mt-1 file-error';
+        errorDiv.style.display = 'none';
+        if (wrapper) {
+            wrapper.appendChild(errorDiv);
+        }
+
+        fileInput.addEventListener('change', function() {
+            const file = fileInput.files[0];
+            if (file) {
+                if (!file.name.toLowerCase().endsWith('.pdf')) {
+                    errorDiv.textContent = 'Only PDF files are allowed.';
+                    errorDiv.style.display = 'block';
+                    fileInput.value = ''; // clear the input
+                } else {
+                    errorDiv.style.display = 'none';
+                }
+            } else {
+                errorDiv.style.display = 'none';
             }
         });
     }
